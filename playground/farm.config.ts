@@ -1,5 +1,14 @@
 import { defineConfig } from "@farmfe/core";
 
 export default defineConfig({
-  plugins: ["@farmfe/plugin-react", "farm-plugin-replace-dirname"],
+  compilation: {
+    input: {
+      index: "./index.js",
+    },
+    output: {
+      targetEnv: "node",
+    },
+    persistentCache: false,
+  },
+  plugins: ["farm-plugin-replace-dirname"],
 });
