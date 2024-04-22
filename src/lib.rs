@@ -13,11 +13,16 @@ use farmfe_toolkit::common::PathFilter;
 use regex::Regex;
 use serde;
 
+use swc_common::Spanned;
+// use swc_ecmascript::{
+//   ast::{Expr, ExprLit, Lit, Str},
+//   visit::{Fold, FoldWith},
+// };
+
+use std::sync::Arc;
+
 #[farm_plugin]
-pub struct FarmPluginReplaceDirname {
-  // options: FarmPluginReplaceDirnameOptions,
-  // regex: Regex,
-}
+pub struct FarmPluginReplaceDirname {}
 
 #[derive(serde::Deserialize)]
 pub struct ReplaceDirnameOptions {
@@ -54,25 +59,10 @@ impl Plugin for FarmPluginReplaceDirname {
     param: &farmfe_core::plugin::PluginTransformHookParam,
     context: &std::sync::Arc<farmfe_core::context::CompilationContext>,
   ) -> farmfe_core::error::Result<Option<farmfe_core::plugin::PluginTransformHookResult>> {
-    // if matches!(context.config.mode, Mode::Production) {
-    // let is_support_module_type = matches!(
-    //   param.module_type,
-    //   ModuleType::Js | ModuleType::Jsx | ModuleType::Ts | ModuleType::Tsx
-    // );
-    // println!("is_support_module_type: {}", is_support_module_type);
     // let filter = PathFilter::new(&self.options.include, &self.options.exclude);
-
-    // determine if it is a support type
-    // is the path is the user-configured include or exclude
-    // if is_support_module_type && filter.execute(&param.resolved_path) {
-    //   let content = self.regex.replace_all(&param.content, "").into_owned();
-
-    //   return Ok(Some(PluginTransformHookResult {
-    //     content,
-    //     ..Default::default()
-    //   }));
+    // if !filter.is_match(&param.resolved_path) {
+    //   return Ok(None);
     // }
-
     let dir_path = Path::new(&param.resolved_path)
       .parent()
       .map_or("", |p| p.to_str().unwrap_or(""));
