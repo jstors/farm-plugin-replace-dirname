@@ -52,7 +52,7 @@ importers:
       core-js:
         specifier: ^3.36.1
         version: 3.37.0
-      farm-plugin-remove-console:
+      farm-plugin-replace-dirname:
         specifier: workspace:*
         version: link:..
       react-refresh:

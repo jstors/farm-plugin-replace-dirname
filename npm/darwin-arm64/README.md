@@ -1,3 +1,3 @@
-# `farm-plugin-remove-console-darwin-arm64`
+# `farm-plugin-replace-dirname-darwin-arm64`
 
-This is the **aarch64-apple-darwin** binary for `farm-plugin-remove-console`
+This is the **aarch64-apple-darwin** binary for `farm-plugin-replace-dirname`

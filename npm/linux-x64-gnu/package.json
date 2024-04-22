@@ -1,5 +1,5 @@
 {
-  "name": "farm-plugin-remove-console-linux-x64-gnu",
+  "name": "farm-plugin-replace-dirname-linux-x64-gnu",
   "version": "0.0.0",
   "os": [
     "linux"

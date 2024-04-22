@@ -1,4 +1,4 @@
-# farm-plugin-remove-console
+# farm-plugin-replace-dirname
 
 ## 0.1.2
 

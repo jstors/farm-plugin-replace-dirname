@@ -1,6 +1,6 @@
 {
-  "name": "farm-plugin-remove-console",
-  "version": "0.1.2",
+  "name": "farm-plugin-replace-dirname",
+  "version": "0.0.1",
   "main": "scripts/index.js",
   "types": "scripts/index.d.ts",
   "type": "module",
@@ -9,7 +9,7 @@
     "@farmfe/plugin-tools": "^0.0.5"
   },
   "napi": {
-    "name": "farm_plugin_remove_console",
+    "name": "farm_plugin_replace_dirname",
     "triples": {
       "additional": [
         "aarch64-apple-darwin",
@@ -31,7 +31,7 @@
   },
   "scripts": {
     "dev": "cargo watch -w src -s 'scripts/watch.sh'",
-    "build": "farm-plugin-tools build --platform --cargo-name farm_plugin_remove_console -p farm_plugin_remove_console --release",
+    "build": "farm-plugin-tools build --platform --cargo-name farm_plugin_replace_dirname -p farm_plugin_replace_dirname --release",
     "bump": "npx changeset version",
     "play": "cd playground && farm",
     "prepublishOnly": "farm-plugin-tools prepublish"

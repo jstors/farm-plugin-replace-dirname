@@ -1,3 +1,3 @@
-# `farm-plugin-remove-console-win32-x64-msvc`
+# `farm-plugin-replace-dirname-win32-x64-msvc`
 
-This is the **x86_64-pc-windows-msvc** binary for `farm-plugin-remove-console`
+This is the **x86_64-pc-windows-msvc** binary for `farm-plugin-replace-dirname`

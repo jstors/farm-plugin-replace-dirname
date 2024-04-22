@@ -1,5 +1,5 @@
 {
-  "name": "farm-plugin-remove-console-win32-ia32-msvc",
+  "name": "farm-plugin-replace-dirname-win32-ia32-msvc",
   "version": "0.0.0",
   "os": [
     "win32"

@@ -1,5 +1,5 @@
 {
-  "name": "farm-plugin-remove-console-darwin-x64",
+  "name": "farm-plugin-replace-dirname-darwin-x64",
   "version": "0.0.0",
   "os": [
     "darwin"

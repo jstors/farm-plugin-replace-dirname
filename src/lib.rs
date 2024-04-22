@@ -1,5 +1,7 @@
 #![deny(clippy::all)]
 
+use std::path::Path;
+
 use farmfe_core::{
   config::{config_regex::ConfigRegex, Config, Mode},
   module::ModuleType,
@@ -52,6 +54,7 @@ impl Plugin for FarmPluginRemoveConsole {
     param: &farmfe_core::plugin::PluginTransformHookParam,
     context: &std::sync::Arc<farmfe_core::context::CompilationContext>,
   ) -> farmfe_core::error::Result<Option<farmfe_core::plugin::PluginTransformHookResult>> {
+    println!("is_support_module_type: {}", "我是奥特曼");
     if matches!(context.config.mode, Mode::Production) {
       let is_support_module_type = matches!(
         param.module_type,
@@ -71,8 +74,18 @@ impl Plugin for FarmPluginRemoveConsole {
       //   }));
       // }
 
+      let dir_path = Path::new(&param.resolved_path)
+        .parent()
+        .map_or("", |p| p.to_str().unwrap_or(""));
+
+      let replace_content = param
+        .content
+        .replace("__dirname", &format!("\"{}\"", dir_path))
+        .replace("__filename", &format!("\"{}\"", param.resolved_path))
+        .replace("import.meta.url", &format!("\"{}\"", param.resolved_path));
+
       return Ok(Some(PluginTransformHookResult {
-        content: param.content.clone(),
+        content: replace_content,
         ..Default::default()
       }));
     }

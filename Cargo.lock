@@ -450,7 +450,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5"
 
 [[package]]
-name = "farm_plugin_remove_console"
+name = "farm_plugin_replace_dirname"
 version = "0.0.0"
 dependencies = [
  "farmfe_core",
