@@ -14,3 +14,10 @@ farmfe_macro_plugin = { version = "*" }
 regex = "1.10.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+swc_ecma_ast = { version = "=0.112.8", features = ["rkyv-impl", "serde-impl"] }
+swc_ecma_parser = { version = "=0.143.16" }
+swc_common = { version = "=0.33.25", features = [
+  "concurrent",
+  "sourcemap",
+  "rkyv-impl",
+] }
