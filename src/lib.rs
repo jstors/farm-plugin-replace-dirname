@@ -13,8 +13,8 @@ use serde;
 
 #[farm_plugin]
 pub struct FarmPluginRemoveConsole {
-  options: RemoveConsoleOptions,
-  regex: Regex,
+  // options: RemoveConsoleOptions,
+  // regex: Regex,
 }
 
 #[derive(serde::Deserialize)]
@@ -36,8 +36,8 @@ impl FarmPluginRemoveConsole {
   fn new(config: &Config, options: String) -> Self {
     let options: RemoveConsoleOptions = serde_json::from_str(&options).unwrap_or_default();
     Self {
-      options,
-      regex: Regex::new(r"console\.log\(.*?\)").unwrap(),
+      // options,
+      // regex: Regex::new(r"console\.log\(.*?\)").unwrap(),
     }
   }
 }
@@ -57,19 +57,24 @@ impl Plugin for FarmPluginRemoveConsole {
         param.module_type,
         ModuleType::Js | ModuleType::Jsx | ModuleType::Ts | ModuleType::Tsx
       );
-
-      let filter = PathFilter::new(&self.options.include, &self.options.exclude);
+      println!("is_support_module_type: {}", is_support_module_type);
+      // let filter = PathFilter::new(&self.options.include, &self.options.exclude);
 
       // determine if it is a support type
       // is the path is the user-configured include or exclude
-      if is_support_module_type && filter.execute(&param.resolved_path) {
-        let content = self.regex.replace_all(&param.content, "").into_owned();
+      // if is_support_module_type && filter.execute(&param.resolved_path) {
+      //   let content = self.regex.replace_all(&param.content, "").into_owned();
 
-        return Ok(Some(PluginTransformHookResult {
-          content,
-          ..Default::default()
-        }));
-      }
+      //   return Ok(Some(PluginTransformHookResult {
+      //     content,
+      //     ..Default::default()
+      //   }));
+      // }
+
+      return Ok(Some(PluginTransformHookResult {
+        content: param.content.clone(),
+        ..Default::default()
+      }));
     }
     Ok(None)
   }
