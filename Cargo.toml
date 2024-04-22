@@ -21,3 +21,4 @@ swc_common = { version = "=0.33.14", features = [
   "sourcemap",
   "rkyv-impl",
 ] }
+swc_ecma_visit = { version = "=0.97.0" }
