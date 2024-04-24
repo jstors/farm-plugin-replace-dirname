@@ -9,6 +9,7 @@ export default defineConfig({
       targetEnv: "node",
     },
     persistentCache: false,
+    progress: false,
   },
   plugins: ["farm-plugin-replace-dirname"],
 });
