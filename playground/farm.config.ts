@@ -3,7 +3,7 @@ import { defineConfig } from "@farmfe/core";
 export default defineConfig({
   compilation: {
     input: {
-      index: "./index.js",
+      index: "./b.js",
     },
     output: {
       targetEnv: "node",
