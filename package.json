@@ -1,6 +1,6 @@
 {
   "name": "farm-plugin-replace-dirname",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "scripts/index.js",
   "types": "scripts/index.d.ts",
   "type": "module",
