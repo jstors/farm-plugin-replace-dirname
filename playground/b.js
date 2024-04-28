@@ -1,1 +1,3 @@
-console.log(__filename)
+import "./c.js";
+
+console.log('hjk');

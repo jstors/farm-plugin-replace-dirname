@@ -34,6 +34,7 @@
     "build": "farm-plugin-tools build --platform --cargo-name farm_plugin_replace_dirname -p farm_plugin_replace_dirname --release",
     "bump": "npx changeset version",
     "play": "cd playground && farm",
+    "build:play": "cd playground && farm build",
     "prepublishOnly": "farm-plugin-tools prepublish"
   },
   "files": [

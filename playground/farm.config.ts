@@ -4,6 +4,7 @@ export default defineConfig({
   compilation: {
     input: {
       index: "./b.js",
+      // index: "./index.html",
     },
     output: {
       targetEnv: "node",
@@ -11,5 +12,8 @@ export default defineConfig({
     persistentCache: false,
     progress: false,
   },
-  plugins: ["farm-plugin-replace-dirname"],
+  plugins: [
+    // ["@farmfe/plugin-react", { runtime: "automatic" }],
+    "farm-plugin-replace-dirname",
+  ],
 });
