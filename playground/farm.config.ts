@@ -1,19 +1,13 @@
 import { defineConfig } from "@farmfe/core";
-
+import replaceDirnamePlugin from 'farm-js-plugin-replace-dirname'
 export default defineConfig({
   compilation: {
     input: {
-      index: "./b.js",
-      // index: "./index.html",
+      index: "./index.ts",
     },
-    output: {
-      targetEnv: "node",
-    },
-    persistentCache: false,
-    progress: false,
+    persistentCache: false
   },
   plugins: [
-    // ["@farmfe/plugin-react", { runtime: "automatic" }],
-    "farm-plugin-replace-dirname",
+    replaceDirnamePlugin()
   ],
 });
