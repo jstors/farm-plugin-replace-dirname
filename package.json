@@ -1,44 +1,49 @@
 {
-  "name": "farm-js-plugin-replace-dirname",
-  "version": "0.0.6",
-  "description": "",
-  "main": "./build/cjs/index.cjs",
-  "types": "./build/esm/index.d.ts",
+  "name": "farm-plugin-replace-dirname",
+  "version": "0.1.6",
+  "main": "scripts/index.js",
+  "types": "scripts/index.d.ts",
   "type": "module",
-  "exports": {
-    ".": {
-      "default": "./build/esm/index.mjs",
-      "require": "./build/cjs/index.cjs",
-      "import": "./build/esm/index.mjs",
-      "types": "./build/esm/index.d.ts"
+  "license": "MIT",
+  "devDependencies": {
+    "@farmfe/plugin-tools": "^0.1.1"
+  },
+  "napi": {
+    "name": "farm_plugin_replace_dirname",
+    "triples": {
+      "additional": [
+        "aarch64-apple-darwin",
+        "aarch64-unknown-linux-gnu",
+        "aarch64-unknown-linux-musl",
+        "x86_64-unknown-linux-musl",
+        "i686-pc-windows-msvc",
+        "aarch64-pc-windows-msvc"
+      ]
     }
   },
-  "scripts": {
-    "build:cjs": "cross-env FARM_FORMAT=cjs farm build",
-    "build": "farm build && npm run build:cjs",
-    "start": "farm watch",
-    "dev": "farm watch",
-    "prepublishOnly": "npm run build"
+  "exports": {
+    ".": {
+      "import": "./scripts/index.js",
+      "require": "./scripts/index.js",
+      "types": "./scripts/index.d.ts"
+    },
+    "./package.json": "./package.json"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@babel/preset-typescript": "^7.24.1",
-    "@farmfe/cli": "^1.0.1",
-    "@farmfe/core": "^1.1.1",
-    "@farmfe/js-plugin-dts": "^0.5.1",
-    "@swc/core": "^1.5.3",
-    "@types/node": "^20.11.16",
-    "cross-env": "^7.0.3"
+  "scripts": {
+    "dev": "cargo watch -w src -s 'scripts/watch.sh'",
+    "bump": "npx changeset version",
+    "play": "cd playground && farm",
+    "build:play": "cd playground && farm build",
+    "build": "farm-plugin-tools build --platform --cargo-name farm_plugin_replace_dirname -p farm_plugin_replace_dirname --release",
+    "prepublishOnly": "farm-plugin-tools prepublish"
   },
   "files": [
-    "build"
+    "scripts",
+    "options.d.ts"
   ],
   "dependencies": {
-    "@babel/generator": "^7.24.5",
-    "@babel/parser": "^7.24.5",
-    "@babel/traverse": "^7.24.5",
-    "@babel/types": "^7.24.5"
+    "@changesets/cli": "^2.27.1",
+    "@farmfe/utils": "^0.0.1",
+    "cac": "^6.7.14"
   }
 }
