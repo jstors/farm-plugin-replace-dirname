@@ -25,10 +25,10 @@ importers:
   playground:
     devDependencies:
       '@farmfe/cli':
-        specifier: ^1.0.0
+        specifier: ^1.0.2
         version: 1.0.2
       '@farmfe/core':
-        specifier: ^1.0.22
+        specifier: ^1.1.12
         version: 1.1.12
       core-js:
         specifier: ^3.36.1

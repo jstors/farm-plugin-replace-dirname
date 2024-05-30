@@ -114,8 +114,8 @@ impl Plugin for FarmPluginReplaceDirname {
     // param.content = Arc::new(code);
     // println!("Module: {:?}", param.module_id.relative_path());
     // let ast = &mut param.meta.as_script_mut().ast;
-    println!("AST: {:#?}", param.meta.as_script_mut().ast);
-    println!("module: {:#?}", module);
+    // println!("AST: {:#?}", param.meta.as_script_mut().ast);
+    // println!("module: {:#?}", module);
     // param.meta.as_script_mut().ast = module;
     let ast = &mut param.meta.as_script_mut().ast;
     // println!("AST: {:#?}", ast);
