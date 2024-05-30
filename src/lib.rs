@@ -86,7 +86,6 @@ impl Plugin for FarmPluginReplaceDirname {
     );
     let module = parser.parse_module().expect("Failed to parse module");
 
-    // 打印 AST
     let mut replacer = DirnameReplacer {
       new_name: "newVarName".to_string(),
     };
@@ -109,6 +108,7 @@ impl Plugin for FarmPluginReplaceDirname {
     emitter.emit_module(&module).expect("Failed to emit module");
     let code = String::from_utf8(buf).expect("Failed to convert buffer to string");
     param.content = code.into();
+    println!("param.content: {}", param.content);
     Ok(Some(()))
   }
 }
