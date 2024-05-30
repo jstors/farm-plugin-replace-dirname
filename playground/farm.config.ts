@@ -3,12 +3,10 @@ import { defineConfig } from "@farmfe/core";
 export default defineConfig({
   compilation: {
     input: {
-      index: "./index.html",
+      index: "./index.js",
     },
-    persistentCache: false,
     progress: false,
+    persistentCache: false,
   },
-  plugins: [
-    ["@farmfe/plugin-react", { runtime: "automatic" }],
-  ],
+  plugins: ["farm-plugin-replace-dirname"],
 });

@@ -1,9 +1,15 @@
 #![deny(clippy::all)]
 
+use std::sync::Arc;
+
+use farmfe_core::swc_ecma_ast::{Document, Element};
+use farmfe_toolkit::swc_html_visit::{VisitMut, VisitMutWith};
+
 use farmfe_core::{
-  config::{config_regex::ConfigRegex, Config, Mode},
-  module::ModuleType,
-  plugin::{Plugin, PluginTransformHookResult},
+  config::{config_regex::ConfigRegex, Config},
+  context::CompilationContext,
+  error::CompilationError,
+  plugin::{Plugin, PluginProcessModuleHookParam, PluginTransformHookResult},
 };
 
 use farmfe_macro_plugin::farm_plugin;
@@ -29,7 +35,6 @@ impl Default for ReplaceDirnameOptions {
     }
   }
 }
-
 impl FarmPluginReplaceDirname {
   fn new(config: &Config, options: String) -> Self {
     let options: ReplaceDirnameOptions = serde_json::from_str(&options).unwrap_or_default();
@@ -42,15 +47,16 @@ impl Plugin for FarmPluginReplaceDirname {
     "FarmPluginReplaceDirname"
   }
 
-  fn transform(
+  fn process_module(
     &self,
-    param: &farmfe_core::plugin::PluginTransformHookParam,
-    context: &std::sync::Arc<farmfe_core::context::CompilationContext>,
-  ) -> farmfe_core::error::Result<Option<farmfe_core::plugin::PluginTransformHookResult>> {
+    param: &mut PluginProcessModuleHookParam,
+    context: &Arc<CompilationContext>,
+  ) -> Result<Option<()>, CompilationError> {
     let filter = PathFilter::new(&self.options.include, &self.options.exclude);
-    if !filter.execute(&param.resolved_path) {
+    if !filter.execute(&param.module_id.relative_path()) {
       return Ok(None);
     }
-    Ok(None)
+    println!("FarmPluginReplaceDirname process_module {:#?}", param.content.to_string());
+    return Ok(None)
   }
 }
