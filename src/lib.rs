@@ -119,7 +119,7 @@ impl Plugin for FarmPluginReplaceDirname {
     // param.meta.as_script_mut().ast = module;
     let ast = &mut param.meta.as_script_mut().ast;
     // println!("AST: {:#?}", ast);
-    // replace_lib_with_aaa(ast);
+    replace_lib_with_aaa(ast);
     Ok(Some(()))
   }
 }
