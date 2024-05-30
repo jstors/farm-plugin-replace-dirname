@@ -1,1 +1,2 @@
-console.log(a)
+console.log(baseName)
+// console.log(__filename)

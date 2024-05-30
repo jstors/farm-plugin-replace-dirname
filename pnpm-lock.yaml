@@ -33,6 +33,9 @@ importers:
       core-js:
         specifier: ^3.36.1
         version: 3.37.1
+      farm-plugin-replace-dirname:
+        specifier: workspace:*
+        version: link:..
 
 packages:
 

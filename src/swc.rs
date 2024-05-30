@@ -1,10 +1,6 @@
 #![deny(clippy::all)]
 
-use std::{
-  env,
-  path::{Path, PathBuf},
-  sync::Arc,
-};
+use std::{path::PathBuf, sync::Arc};
 
 use farmfe_core::{
   config::{config_regex::ConfigRegex, Config},
@@ -112,40 +108,14 @@ impl Plugin for FarmPluginReplaceDirname {
       comments: None,
       wr: writer,
     };
-    // println!("Emitting module {:#?}", module);
-    // emitter.emit_module(&module).expect("Failed to emit module");
-    // let code = String::from_utf8(buf).expect("Failed to convert buffer to string");
-    // param.content = Arc::new(code);
-    // println!("Module: {:?}", param.module_id.relative_path());
-    // let ast = &mut param.meta.as_script_mut().ast;
-    // println!("AST: {:#?}", param.meta.as_script_mut().ast);
-    // println!("module: {:#?}", module);
-    // param.meta.as_script_mut().ast = module;
-    let absolute_path = env::current_dir()
-      .unwrap()
-      .join(param.module_id.relative_path());
+    println!("Emitting module {:#?}", module);
+    emitter.emit_module(&module).expect("Failed to emit module");
+    let code = String::from_utf8(buf).expect("Failed to convert buffer to string");
+    param.content = Arc::new(code);
+    println!("Module: {:?}", param.module_id.relative_path());
+    println!("module: {:#?}", module);
 
-    let dir_path: &str = Path::new(&absolute_path)
-      .parent()
-      .map_or("", |p| p.to_str().unwrap_or(""));
-
-    let ast = &mut param.meta.as_script_mut().ast;
-    // println!("AST: {:#?}", ast);
-    replace_lib_with_aaa(ast, absolute_path);
     Ok(Some(()))
   }
 }
 
-pub fn replace_lib_with_aaa(ast: &mut Module, absolute_path: PathBuf) {
-  struct ReplaceLibVisitor;
-
-  impl VisitMut for ReplaceLibVisitor {
-    fn visit_mut_ident(&mut self, ident: &mut Ident) {
-      if ident.sym == *"baseName" {
-        *ident = Ident::new("bbbbbb".into(), DUMMY_SP);
-      }
-    }
-  }
-  let mut visitor = ReplaceLibVisitor;
-  ast.visit_mut_with(&mut visitor);
-}
