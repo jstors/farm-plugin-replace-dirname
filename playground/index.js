@@ -1,2 +1,2 @@
-console.log(baseName)
-// console.log(__filename)
+const bbbbbb = 123132132132
+console.log(__dirname)

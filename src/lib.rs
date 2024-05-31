@@ -52,18 +52,6 @@ impl FarmPluginReplaceDirname {
   }
 }
 
-struct DirnameReplacer {
-  new_name: String,
-}
-
-impl VisitMut for DirnameReplacer {
-  fn visit_mut_ident(&mut self, n: &mut swc_ecma_ast::Ident) {
-    if n.sym == *"lib" {
-      n.sym = self.new_name.clone().into();
-    }
-  }
-}
-
 impl Plugin for FarmPluginReplaceDirname {
   fn name(&self) -> &str {
     "FarmPluginReplaceDirname"
@@ -78,49 +66,6 @@ impl Plugin for FarmPluginReplaceDirname {
     if !filter.execute(&param.module_id.relative_path()) {
       return Ok(None);
     }
-    let content = param.content.to_string();
-    let input = StringInput::new(&content, BytePos::DUMMY, BytePos::DUMMY);
-    let mut parser = Parser::new(
-      Syntax::Es(EsConfig {
-        jsx: true,
-        ..Default::default()
-      }),
-      input,
-      None,
-    );
-    let module = parser.parse_module().expect("Failed to parse module");
-
-    let mut replacer = DirnameReplacer {
-      new_name: "newVarName".to_string(),
-    };
-    let mut module = module;
-    // module.visit_mut_with(&mut replacer);
-    // let cm = Arc::new(SourceMap::default());
-    let (cm, _) = create_swc_source_map(Source {
-      path: PathBuf::from(&param.module_id.to_string()),
-      content: param.content.clone(),
-    });
-    let mut buf = vec![];
-    let writer = Box::new(JsWriter::new(cm.clone(), "\n", &mut buf, None));
-    let mut emitter = Emitter {
-      cfg: {
-        let mut cfg = swc_ecma_codegen::Config::default();
-        cfg.minify = false;
-        cfg
-      },
-      cm: cm.clone(),
-      comments: None,
-      wr: writer,
-    };
-    // println!("Emitting module {:#?}", module);
-    // emitter.emit_module(&module).expect("Failed to emit module");
-    // let code = String::from_utf8(buf).expect("Failed to convert buffer to string");
-    // param.content = Arc::new(code);
-    // println!("Module: {:?}", param.module_id.relative_path());
-    // let ast = &mut param.meta.as_script_mut().ast;
-    // println!("AST: {:#?}", param.meta.as_script_mut().ast);
-    // println!("module: {:#?}", module);
-    // param.meta.as_script_mut().ast = module;
     let absolute_path = env::current_dir()
       .unwrap()
       .join(param.module_id.relative_path());
@@ -131,21 +76,48 @@ impl Plugin for FarmPluginReplaceDirname {
 
     let ast = &mut param.meta.as_script_mut().ast;
     // println!("AST: {:#?}", ast);
-    replace_lib_with_aaa(ast, absolute_path);
+    replace_dirname_with_ast(param);
     Ok(Some(()))
   }
 }
 
-pub fn replace_lib_with_aaa(ast: &mut Module, absolute_path: PathBuf) {
-  struct ReplaceLibVisitor;
+pub fn replace_dirname_with_ast(param: &mut PluginProcessModuleHookParam) {
+  let absolute_path = env::current_dir()
+    .unwrap()
+    .join(param.module_id.relative_path());
 
-  impl VisitMut for ReplaceLibVisitor {
+  let dir_path: &str = Path::new(&absolute_path)
+    .parent()
+    .map_or("", |p| p.to_str().unwrap_or(""));
+
+  println!("Dir path: {:?}", dir_path);
+  println!("absolute_path: {:?}", absolute_path);
+
+  let ast = &mut param.meta.as_script_mut().ast;
+
+  struct ReplaceLibVisitor<'a> {
+    dir_path: &'a str,
+    absolute_path: &'a str,
+  }
+
+  impl<'a> VisitMut for ReplaceLibVisitor<'a> {
     fn visit_mut_ident(&mut self, ident: &mut Ident) {
-      if ident.sym == *"baseName" {
-        *ident = Ident::new("bbbbbb".into(), DUMMY_SP);
+      match &*ident.sym {
+        "__dirname" => {
+          *ident = Ident::new(self.dir_path.into(), DUMMY_SP);
+        }
+        "__filename" => {
+          *ident = Ident::new(self.absolute_path.into(), DUMMY_SP);
+        }
+        _ => {}
       }
     }
   }
-  let mut visitor = ReplaceLibVisitor;
+
+  let mut visitor = ReplaceLibVisitor {
+    dir_path,
+    absolute_path: absolute_path.to_str().unwrap(),
+  };
+
   ast.visit_mut_with(&mut visitor);
 }
