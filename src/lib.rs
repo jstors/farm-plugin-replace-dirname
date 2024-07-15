@@ -2,7 +2,7 @@
 
 use std::{
   env,
-  path::{Path, PathBuf},
+  path::Path,
   sync::Arc,
 };
 
@@ -10,18 +10,14 @@ use farmfe_core::{
   config::{config_regex::ConfigRegex, Config},
   context::CompilationContext,
   error::CompilationError,
-  plugin::{Plugin, PluginProcessModuleHookParam, PluginTransformHookResult},
-  swc_common::{comments::NoopComments, BytePos, Mark, SourceMap, DUMMY_SP},
-  swc_ecma_ast::{self, Expr, Ident, Lit, MemberExpr, MemberProp, Module, Str},
-  swc_ecma_parser::{EsConfig, Parser, StringInput, Syntax},
+  plugin::{Plugin, PluginProcessModuleHookParam},
+  swc_common::DUMMY_SP,
+  swc_ecma_ast::{self, Expr, Lit, MemberExpr, MemberProp, Module, Str},
 };
 
 use farmfe_macro_plugin::farm_plugin;
 use farmfe_toolkit::{
-  common::{create_swc_source_map, PathFilter, Source},
-  script::swc_try_with::try_with,
-  swc_ecma_codegen::{self, text_writer::JsWriter, Emitter},
-  swc_ecma_transforms::{helpers::inject_helpers, typescript::tsx},
+  common::PathFilter,
   swc_ecma_visit::{VisitMut, VisitMutWith},
 };
 use serde;
@@ -47,7 +43,7 @@ impl Default for ReplaceDirnameOptions {
 }
 
 impl FarmPluginReplaceDirname {
-  fn new(config: &Config, options: String) -> Self {
+  fn new(_: &Config, options: String) -> Self {
     let options: ReplaceDirnameOptions = serde_json::from_str(&options).unwrap_or_default();
     Self { options }
   }
@@ -61,7 +57,7 @@ impl Plugin for FarmPluginReplaceDirname {
   fn process_module(
     &self,
     param: &mut PluginProcessModuleHookParam,
-    context: &Arc<CompilationContext>,
+    _: &Arc<CompilationContext>,
   ) -> Result<Option<()>, CompilationError> {
     let filter = PathFilter::new(&self.options.include, &self.options.exclude);
     if !filter.execute(&param.module_id.relative_path()) {
