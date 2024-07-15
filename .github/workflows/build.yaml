@@ -83,7 +83,7 @@ jobs:
         with:
           node-version: 18
       - name: Install Dependencies
-        run: npm install -g pnpm@8.15.1 && pnpm i --frozen-lockfile
+        run: npm install -g pnpm@8.15.1 && pnpm i --no-frozen-lockfile
       - run: rustup target add ${{ matrix.settings.target }}
         if: ${{ matrix.settings.target }}
       # Use the v1 of this action
