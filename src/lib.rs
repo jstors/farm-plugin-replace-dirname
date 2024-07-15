@@ -75,7 +75,6 @@ impl Plugin for FarmPluginReplaceDirname {
       .map_or("", |p| p.to_str().unwrap_or(""));
 
     let ast = &mut param.meta.as_script_mut().ast;
-    // println!("AST: {:#?}", ast);
     replace_dirname_with_ast(param);
     Ok(Some(()))
   }
@@ -90,9 +89,6 @@ pub fn replace_dirname_with_ast(param: &mut PluginProcessModuleHookParam) {
     .parent()
     .map_or("", |p| p.to_str().unwrap_or(""));
 
-  println!("Dir path: {:?}", dir_path);
-  println!("absolute_path: {:?}", absolute_path);
-
   let ast = &mut param.meta.as_script_mut().ast;
 
   struct ReplaceLibVisitor<'a> {
@@ -104,10 +100,10 @@ pub fn replace_dirname_with_ast(param: &mut PluginProcessModuleHookParam) {
     fn visit_mut_ident(&mut self, ident: &mut Ident) {
       match &*ident.sym {
         "__dirname" => {
-          *ident = Ident::new(self.dir_path.into(), DUMMY_SP);
+          *ident = Ident::new(format!("\"{}\"", self.dir_path).into(), DUMMY_SP);
         }
         "__filename" => {
-          *ident = Ident::new(self.absolute_path.into(), DUMMY_SP);
+          *ident = Ident::new(format!("\"{}\"", self.absolute_path).into(), DUMMY_SP);
         }
         _ => {}
       }

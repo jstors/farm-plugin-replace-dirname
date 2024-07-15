@@ -7,6 +7,11 @@ export default defineConfig({
     },
     progress: false,
     persistentCache: false,
+    runtime: {
+      isolate: true
+    },
+    minify: false,
+    sourcemap: false,
   },
   plugins: ["farm-plugin-replace-dirname"],
 });
