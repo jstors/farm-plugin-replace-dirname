@@ -42,7 +42,7 @@ jobs:
           node-version: 20
 
       - name: Install Dependencies
-        run: npm install -g pnpm@8.15.1 && pnpm i --frozen-lockfile
+        run: npm install -g pnpm@8.15.1 && pnpm i --no-frozen-lockfile
 
       - name: Create .npmrc file
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
