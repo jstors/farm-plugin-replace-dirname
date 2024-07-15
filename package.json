@@ -1,6 +1,6 @@
 {
   "name": "farm-plugin-replace-dirname",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "main": "scripts/index.js",
   "types": "scripts/index.d.ts",
   "type": "module",
@@ -30,7 +30,8 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "dev": "cargo watch -w src -s 'scripts/watch.sh'",
+    "dev:mac": "cargo watch -w src -s 'scripts/watch.sh'",
+    "dev:win": "cargo watch -w src -s 'cmd /C scripts\\watch.bat'",
     "bump": "npx changeset version",
     "play": "cd playground && farm",
     "build:play": "cd playground && farm build",

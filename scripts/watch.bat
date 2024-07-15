@@ -1,0 +1,3 @@
+@echo off
+echo Running watch script...
+npm run build

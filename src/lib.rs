@@ -12,7 +12,7 @@ use farmfe_core::{
   error::CompilationError,
   plugin::{Plugin, PluginProcessModuleHookParam, PluginTransformHookResult},
   swc_common::{comments::NoopComments, BytePos, Mark, SourceMap, DUMMY_SP},
-  swc_ecma_ast::{self, Ident, Module},
+  swc_ecma_ast::{self, Expr, Ident, Lit, MemberExpr, MemberProp, Module, Str},
   swc_ecma_parser::{EsConfig, Parser, StringInput, Syntax},
 };
 
@@ -45,6 +45,7 @@ impl Default for ReplaceDirnameOptions {
     }
   }
 }
+
 impl FarmPluginReplaceDirname {
   fn new(config: &Config, options: String) -> Self {
     let options: ReplaceDirnameOptions = serde_json::from_str(&options).unwrap_or_default();
@@ -66,53 +67,75 @@ impl Plugin for FarmPluginReplaceDirname {
     if !filter.execute(&param.module_id.relative_path()) {
       return Ok(None);
     }
-    let absolute_path = env::current_dir()
+
+    let file_path = env::current_dir()
       .unwrap()
       .join(param.module_id.relative_path());
 
-    let dir_path: &str = Path::new(&absolute_path)
+    let dir_path: &str = Path::new(&file_path)
       .parent()
       .map_or("", |p| p.to_str().unwrap_or(""));
 
     let ast = &mut param.meta.as_script_mut().ast;
-    replace_dirname_with_ast(param);
+    replace_dirname_with_ast(ast, dir_path, file_path.to_str().unwrap());
     Ok(Some(()))
   }
 }
 
-pub fn replace_dirname_with_ast(param: &mut PluginProcessModuleHookParam) {
-  let absolute_path = env::current_dir()
-    .unwrap()
-    .join(param.module_id.relative_path());
-
-  let dir_path: &str = Path::new(&absolute_path)
-    .parent()
-    .map_or("", |p| p.to_str().unwrap_or(""));
-
-  let ast = &mut param.meta.as_script_mut().ast;
-
+pub fn replace_dirname_with_ast(ast: &mut Module, dir_path: &str, file_path: &str) {
   struct ReplaceLibVisitor<'a> {
     dir_path: &'a str,
-    absolute_path: &'a str,
+    file_path: &'a str,
   }
 
   impl<'a> VisitMut for ReplaceLibVisitor<'a> {
-    fn visit_mut_ident(&mut self, ident: &mut Ident) {
-      match &*ident.sym {
-        "__dirname" => {
-          *ident = Ident::new(format!("\"{}\"", self.dir_path).into(), DUMMY_SP);
+    fn visit_mut_expr(&mut self, expr: &mut Expr) {
+      match expr {
+        Expr::Ident(ident) => {
+          match &*ident.sym {
+            "__dirname" => {
+              *expr = Expr::Lit(Lit::Str(Str {
+                value: self.dir_path.into(),
+                span: DUMMY_SP,
+                raw: None,
+              }));
+            }
+            "__filename" => {
+              *expr = Expr::Lit(Lit::Str(Str {
+                value: self.file_path.into(),
+                span: DUMMY_SP,
+                raw: None,
+              }));
+            }
+            _ => {}
+          }
         }
-        "__filename" => {
-          *ident = Ident::new(format!("\"{}\"", self.absolute_path).into(), DUMMY_SP);
+        Expr::Member(MemberExpr { obj, prop, .. }) => {
+          if let Expr::MetaProp(meta_prop) = &**obj {
+            if meta_prop.kind == swc_ecma_ast::MetaPropKind::ImportMeta {
+              if let MemberProp::Ident(ident) = &prop {
+                if ident.sym == "url" {
+                  *expr = Expr::Lit(Lit::Str(Str {
+                    value: self.file_path.into(),
+                    span: DUMMY_SP,
+                    raw: None,
+                  }));
+                }
+              }
+            }
+          }
         }
-        _ => {}
+        _ => {
+          // 递归访问子节点
+          expr.visit_mut_children_with(self);
+        }
       }
     }
   }
 
   let mut visitor = ReplaceLibVisitor {
     dir_path,
-    absolute_path: absolute_path.to_str().unwrap(),
+    file_path,
   };
 
   ast.visit_mut_with(&mut visitor);
