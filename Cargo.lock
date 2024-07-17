@@ -452,9 +452,9 @@ checksum = "60b1af1c220855b6ceac025d3f6ecdd2b7c4894bfe9cd9bda4fbb4bc7c0d4cf0"
 
 [[package]]
 name = "enhanced-magic-string"
-version = "0.0.14"
+version = "0.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "28941685318c3ab497f802f6dab956c80e1b373852f890fc373d8df18a7a31a6"
+checksum = "6082b74cc322c69840d97a7d7cba3ee9ed34fa70536fb51a69824f36742960f5"
 dependencies = [
  "base64 0.22.1",
  "farmfe_utils",
@@ -480,13 +480,14 @@ dependencies = [
  "regex",
  "serde",
  "serde_json",
+ "url",
 ]
 
 [[package]]
 name = "farmfe_core"
-version = "0.6.1"
+version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "99325a75a291326d80cbcc96d4f146b30578877e8fa2ab098a467530394c94cc"
+checksum = "8ace47d8f9846d426af3462d631690d5eba8ae778f58ce4b096d410975d9df6f"
 dependencies = [
  "blake2",
  "bytecheck 0.7.0",
@@ -543,18 +544,18 @@ dependencies = [
 
 [[package]]
 name = "farmfe_testing_helpers"
-version = "0.0.10"
+version = "0.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "14e69fccdf24b6d85a7884fec7854031fd6670752843118c58d4c3c1a91fd9f8"
+checksum = "7221894daf03993638a8341ebe9e93d3147a7a1334247c36d7afd373ee53857c"
 dependencies = [
  "farmfe_core",
 ]
 
 [[package]]
 name = "farmfe_toolkit"
-version = "0.0.10"
+version = "0.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1df6637b056356e24eb9d53f7f57b435a996ee2507ebc1bb7800c4a9c92ec8e8"
+checksum = "48d8e7981a2d15a79fb6ff1866d6aa381ad10d0427644f55599e727112e0784d"
 dependencies = [
  "anyhow",
  "farmfe_core",
@@ -588,9 +589,9 @@ dependencies = [
 
 [[package]]
 name = "farmfe_toolkit_plugin_types"
-version = "0.0.17"
+version = "0.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a612cdddf4f9f592d70f8db68ff044a9ea136acd8c4f5f5e12fc81b6c61b2678"
+checksum = "2b9933e059e6d28fb4c81e78aabfd1ca9288feb7a9e2c0516b4f08ca8b2d5c80"
 dependencies = [
  "farmfe_core",
  "lazy_static",

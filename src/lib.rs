@@ -1,11 +1,5 @@
 #![deny(clippy::all)]
 
-use std::{
-  env,
-  path::Path,
-  sync::Arc,
-};
-
 use farmfe_core::{
   config::{config_regex::ConfigRegex, Config},
   context::CompilationContext,
@@ -14,6 +8,8 @@ use farmfe_core::{
   swc_common::DUMMY_SP,
   swc_ecma_ast::{self, Expr, Lit, MemberExpr, MemberProp, Module, Str},
 };
+use std::{env, path::Path, sync::Arc};
+use url::Url;
 
 use farmfe_macro_plugin::farm_plugin;
 use farmfe_toolkit::{
@@ -87,42 +83,41 @@ pub fn replace_dirname_with_ast(ast: &mut Module, dir_path: &str, file_path: &st
   impl<'a> VisitMut for ReplaceLibVisitor<'a> {
     fn visit_mut_expr(&mut self, expr: &mut Expr) {
       match expr {
-        Expr::Ident(ident) => {
-          match &*ident.sym {
-            "__dirname" => {
-              *expr = Expr::Lit(Lit::Str(Str {
-                value: self.dir_path.into(),
-                span: DUMMY_SP,
-                raw: None,
-              }));
-            }
-            "__filename" => {
-              *expr = Expr::Lit(Lit::Str(Str {
-                value: self.file_path.into(),
-                span: DUMMY_SP,
-                raw: None,
-              }));
-            }
-            _ => {}
+        Expr::Ident(ident) => match &*ident.sym {
+          "__dirname" => {
+            *expr = Expr::Lit(Lit::Str(Str {
+              value: self.dir_path.into(),
+              span: DUMMY_SP,
+              raw: None,
+            }));
           }
-        }
+          "__filename" => {
+            *expr = Expr::Lit(Lit::Str(Str {
+              value: self.file_path.into(),
+              span: DUMMY_SP,
+              raw: None,
+            }));
+          }
+          _ => {}
+        },
         Expr::Member(MemberExpr { obj, prop, .. }) => {
           if let Expr::MetaProp(meta_prop) = &**obj {
             if meta_prop.kind == swc_ecma_ast::MetaPropKind::ImportMeta {
               if let MemberProp::Ident(ident) = &prop {
                 if ident.sym == "url" {
-                  *expr = Expr::Lit(Lit::Str(Str {
-                    value: self.file_path.into(),
-                    span: DUMMY_SP,
-                    raw: None,
-                  }));
+                  if let Ok(file_path) = Url::from_file_path(&self.file_path) {
+                    *expr = Expr::Lit(Lit::Str(Str {
+                      value: file_path.to_string().into(),
+                      span: DUMMY_SP,
+                      raw: None,
+                    }));
+                  }
                 }
               }
             }
           }
         }
         _ => {
-          // 递归访问子节点
           expr.visit_mut_children_with(self);
         }
       }
