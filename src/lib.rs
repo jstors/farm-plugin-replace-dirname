@@ -1,3 +1,4 @@
+// 2024-8-21 farmfe_core: 0.6.4
 #![deny(clippy::all)]
 
 use farmfe_core::{
