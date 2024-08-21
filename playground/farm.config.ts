@@ -5,6 +5,9 @@ export default defineConfig({
     input: {
       index: "./index.js",
     },
+    output: {
+      format: "cjs"
+    },
     progress: false,
     persistentCache: false,
     runtime: {
