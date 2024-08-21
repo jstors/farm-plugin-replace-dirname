@@ -12,8 +12,8 @@ importers:
         specifier: ^2.27.1
         version: 2.27.1
       '@farmfe/utils':
-        specifier: ^0.0.1
-        version: 0.0.1
+        specifier: 0.1.0
+        version: 0.1.0
       cac:
         specifier: ^6.7.14
         version: 6.7.14
